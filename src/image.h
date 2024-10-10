@@ -4,8 +4,7 @@
 #include <cstdint>
 #include <vector>
 
-#include <glm/common.hpp>
-#include <glm/vec3.hpp>
+#include "common.h"
 
 class Image {
 private:
@@ -32,5 +31,6 @@ public:
 	void set(int x, int y, const glm::vec3& val) {
 		data[idx(x, y)] = val;
 	}
+	void gammaCorrect(float gamma = 2.2f);
 	void write(std::string file) const;
 };

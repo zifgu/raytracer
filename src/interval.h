@@ -1,7 +1,5 @@
 #pragma once
 
-#include <glm/common.hpp>
-
 #include "common.h"
 
 class Interval {

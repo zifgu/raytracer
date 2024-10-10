@@ -1,12 +1,14 @@
 #pragma once
 
 #include "hittable.h"
+#include "material.h"
 
 class Sphere : public Hittable {
 	glm::vec3 center = glm::vec3(0.f);
 	float radius = 0.f;
+	std::shared_ptr<Material> material = nullptr;
 public:
-	Sphere(const glm::vec3& center, float radius) : center(center), radius(radius) {}
+	Sphere(const glm::vec3& center, float radius, std::shared_ptr<Material> material) : center(center), radius(radius), material(material){}
 
 	bool hit(const Ray& ray, Interval tRange, HitRecord& hit) const override {
 		glm::vec3 oc = center - ray.origin();
@@ -31,6 +33,7 @@ public:
 		hit.point = ray.at(hit.t);
 		glm::vec3 outwardNormal = (hit.point - center) / radius;
 		hit.setFrontFaceAndNormal(ray, outwardNormal);
+		hit.material = material;
 
 		return true;
 	}

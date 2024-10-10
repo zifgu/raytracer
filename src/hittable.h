@@ -1,10 +1,10 @@
 #pragma once
 
-#include <glm/vec3.hpp>
-#include <glm/geometric.hpp>
-
+#include "common.h"
 #include "ray.h"
 #include "interval.h"
+
+class Material;
 
 class Hittable {
 public:
@@ -12,6 +12,7 @@ public:
 		glm::vec3 point;
 		glm::vec3 normal;
 		float t;
+		std::shared_ptr<Material> material;
 		bool frontFace;
 
 		void setFrontFaceAndNormal(const Ray& ray, const glm::vec3& outwardNormal) {

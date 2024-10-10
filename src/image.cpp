@@ -21,3 +21,15 @@ void Image::write(std::string file) const {
 
 	delete[] data;
 }
+
+void Image::gammaCorrect(float gamma) {
+	float inverseGamma = 1.f / gamma;
+
+	for (int x = 0; x < w; ++x) {
+		for (int y = 0; y < h; ++y) {
+			glm::vec3 pixel = get(x, y);
+			glm::vec3 corrected = glm::pow(glm::max(pixel, 0.f), glm::vec3(inverseGamma));
+			set(x, y, corrected);
+		}
+	}
+}
