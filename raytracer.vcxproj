@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\dielectric.h" />
     <ClInclude Include="src\lambertian.h" />
     <ClInclude Include="src\material.h" />
     <ClInclude Include="src\metal.h" />
