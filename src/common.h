@@ -8,6 +8,7 @@
 #include <glm/vec4.hpp>
 #include <glm/common.hpp>
 #include <glm/geometric.hpp>
+#include <glm/trigonometric.hpp>
 
 const float infinity = std::numeric_limits<float>::infinity();
 

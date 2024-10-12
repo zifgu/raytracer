@@ -23,7 +23,7 @@
     <ClInclude Include="src\lambertian.h" />
     <ClInclude Include="src\material.h" />
     <ClInclude Include="src\metal.h" />
-    <ClInclude Include="src\projection.h" />
+    <ClInclude Include="src\camera.h" />
     <ClInclude Include="src\common.h" />
     <ClInclude Include="src\hittable_list.h" />
     <ClInclude Include="src\image.h" />
