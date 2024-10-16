@@ -1,7 +1,29 @@
 #include "image.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
+
+Image::Image(std::string file) {
+	int n;
+	float* rawData = stbi_loadf(file.c_str(), &w, &h, &n, c);
+	if (rawData == nullptr) {
+		w = h = 0;
+		return;
+	}
+	data.resize(w * h * c);
+	for (int x = 0; x < w; ++x) {
+		for (int y = 0; y < h; ++y) {
+			int dataIdx = y * w * c + x * c;
+			float r = rawData[dataIdx + 0];
+			float g = rawData[dataIdx + 1];
+			float b = rawData[dataIdx + 2];
+			set(x, y, glm::vec3(r, g, b));
+		}
+	}
+}
 
 void Image::write(std::string file) const {
 	uint8_t* data = new uint8_t[w * h * c];

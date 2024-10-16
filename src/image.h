@@ -3,6 +3,7 @@
 #include <string>
 #include <cstdint>
 #include <vector>
+#include <string>
 
 #include "common.h"
 
@@ -17,6 +18,7 @@ private:
 		return y * w * c + x * c;
 	}
 public:
+	Image(std::string file);
 	Image(int width, int height) : w(width), h(height) {
 		data.resize(w * h * c);
 	}

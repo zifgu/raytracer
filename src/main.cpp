@@ -13,10 +13,53 @@
 #include "dielectric.h"
 #include "bvh.h"
 
-HittableList testScene() {
+HittableList testEarthScene() {
     HittableList world;
 
-    auto material_ground = std::make_shared<Lambertian>(glm::vec3(0.8, 0.8, 0.0));
+    std::shared_ptr<Texture> earthTexture = std::make_shared<ImageTexture>("C:\\Users\\markf\\GitHub\\raytracer\\data\\earthmap.jpg");
+    auto earthMaterial = std::make_shared<Lambertian>(earthTexture);
+    auto globe = std::make_shared<Sphere>(glm::vec3(0.f, 0.f, 0.f), 2.f, earthMaterial);
+
+    world.add(globe);
+    return world;
+}
+
+Camera testEarthSceneCamera(const glm::ivec2& imageSize) {
+    glm::vec3 lookFrom(0.f, 0.f, 12.f);
+    glm::vec3 lookAt(0.f, 0.f, 0.f);
+    Camera::Projection projection(imageSize, 20.f, 1.f);
+    Camera::Frame frame(lookFrom, lookAt);
+    return Camera(frame, projection);
+}
+
+HittableList testCheckeredSpheresScene() {
+    HittableList world;
+
+    std::shared_ptr<Texture> checkerEven = std::make_shared<SolidColorTexture>(glm::vec3(.2, .3, .1));
+    std::shared_ptr<Texture> checkerOdd = std::make_shared<SolidColorTexture>(glm::vec3(.9, .9, .9));
+    std::shared_ptr<Texture> checker = std::make_shared<CheckerTexture>(0.32, checkerEven, checkerOdd);
+
+    world.add(std::make_shared<Sphere>(glm::vec3(0, -10, 0), 10, std::make_shared<Lambertian>(checker)));
+    world.add(std::make_shared<Sphere>(glm::vec3(0, 10, 0), 10, std::make_shared<Lambertian>(checker)));
+
+    return world;
+}
+
+Camera testCheckeredSpheresSceneCamera(const glm::ivec2& imageSize) {
+    glm::vec3 lookFrom(13.f, 2.f, 3.f);
+    glm::vec3 lookAt(0.f, 0.f, 0.f);
+    Camera::Projection projection(imageSize, 20.f, 1.f);
+    Camera::Frame frame(lookFrom, lookAt);
+    return Camera(frame, projection);
+}
+
+HittableList testScene() {
+    HittableList world;
+    std::shared_ptr<Texture> checkerEven = std::make_shared<SolidColorTexture>(glm::vec3(.2, .3, .1));
+    std::shared_ptr<Texture> checkerOdd = std::make_shared<SolidColorTexture>(glm::vec3(.9, .9, .9));
+    std::shared_ptr<Texture> checker = std::make_shared<CheckerTexture>(0.32, checkerEven, checkerOdd);
+
+    auto material_ground = std::make_shared<Lambertian>(checker);
     auto material_center = std::make_shared<Lambertian>(glm::vec3(0.1, 0.2, 0.5));
     auto material_left = std::make_shared<Dielectric>(1.50);
     auto material_bubble = std::make_shared<Dielectric>(1.00 / 1.50);
@@ -96,8 +139,8 @@ Camera finalSceneCamera(const glm::ivec2& imageSize) {
 
 int main() {
     glm::ivec2 imageSize = glm::ivec2(320, 180);
-    HittableList world = finalScene();
-    Camera camera = finalSceneCamera(imageSize);
+    HittableList world = testEarthScene();
+    Camera camera = testEarthSceneCamera(imageSize);
     Image img(imageSize.x, imageSize.y);
 
     HittableList bvhWorld;

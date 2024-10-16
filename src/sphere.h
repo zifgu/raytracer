@@ -7,6 +7,22 @@ class Sphere : public Hittable {
 	glm::vec3 center = glm::vec3(0.f);
 	float radius = 0.f;
 	std::shared_ptr<Material> material = nullptr;
+
+	// p is a point on the unit sphere centered at 0
+	static glm::vec2 getSphereUV(const glm::vec3& p) {
+		// uv coordinates should be clockwise around the sphere;
+		// also offset by pi to avoid jumping from pi to -pi
+		float phi = glm::atan(-p.z, p.x) + pi;
+
+		// uv coordinates should go from bottom of the sphere to top
+		float theta = glm::acos(-p.y);
+
+		// scale to [0, 1]
+		float u = phi / (2 * pi);
+		float v = theta / pi;
+
+		return glm::vec2(u, v);
+	}
 public:
 	Sphere(const glm::vec3& center, float radius, std::shared_ptr<Material> material) : center(center), radius(radius), material(material){}
 
@@ -33,6 +49,7 @@ public:
 		hit.point = ray.at(hit.t);
 		glm::vec3 outwardNormal = (hit.point - center) / radius;
 		hit.setFrontFaceAndNormal(ray, outwardNormal);
+		hit.uv = getSphereUV(outwardNormal);
 		hit.material = material;
 
 		return true;

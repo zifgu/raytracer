@@ -11,6 +11,7 @@
 #include <glm/trigonometric.hpp>
 
 const float infinity = std::numeric_limits<float>::infinity();
+const float pi = 3.14159265;
 
 inline float random() {
 	static std::uniform_real_distribution<float> distribution(0.0, 1.0);

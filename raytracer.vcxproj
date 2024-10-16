@@ -32,7 +32,9 @@
     <ClInclude Include="src\ray.h" />
     <ClInclude Include="src\renderer.h" />
     <ClInclude Include="src\sphere.h" />
+    <ClInclude Include="src\stb_image.h" />
     <ClInclude Include="src\stb_image_write.h" />
+    <ClInclude Include="src\texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\hittable.h" />
