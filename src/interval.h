@@ -24,6 +24,14 @@ public:
 		m_min = glm::min(min(), other.min());
 		m_max = glm::max(max(), other.max());
 	}
+	void expand(float x) { 
+		m_min = glm::min(min(), x);
+		m_max = glm::max(max(), x);
+	}
+	void pad(float delta) {
+		m_min = min() - 0.5f * delta;
+		m_max = max() + 0.5f * delta;
+	}
 
 	static const Interval empty;
 	static const Interval positive;

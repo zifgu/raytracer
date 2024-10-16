@@ -8,11 +8,11 @@ class Material;
 class Hittable {
 public:
 	struct HitRecord {
+		std::shared_ptr<Material> material;
 		glm::vec3 point;
 		glm::vec3 normal;
 		glm::vec2 uv;
 		float t;
-		std::shared_ptr<Material> material;
 		bool frontFace;
 
 		void setFrontFaceAndNormal(const Ray& ray, const glm::vec3& outwardNormal) {

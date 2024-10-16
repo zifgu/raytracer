@@ -4,6 +4,7 @@
 #include "common.h"
 #include "image.h"
 #include "sphere.h"
+#include "quad.h"
 #include "hittable_list.h"
 #include "camera.h"
 #include "renderer.h"
@@ -11,6 +12,34 @@
 #include "metal.h"
 #include "dielectric.h"
 #include "bvh.h"
+
+HittableList testQuadScene() {
+    HittableList world;
+
+    // Materials
+    auto left_red = std::make_shared<Lambertian>(glm::vec3(1.0f, 0.2f, 0.2f));
+    auto back_green = std::make_shared<Lambertian>(glm::vec3(0.2f, 1.0f, 0.2f));
+    auto right_blue = std::make_shared<Lambertian>(glm::vec3(0.2f, 0.2f, 1.0f));
+    auto upper_orange = std::make_shared<Lambertian>(glm::vec3(1.0f, 0.5f, 0.0f));
+    auto lower_teal = std::make_shared<Lambertian>(glm::vec3(0.2f, 0.8f, 0.8f));
+
+    // Quads
+    world.add(std::make_shared<Quad>(glm::vec3(-3.f, -2.f, 5.f), glm::vec3(0.f, 0.f, -4.f), glm::vec3(0.f, 4.f, 0.f), left_red));
+    world.add(std::make_shared<Quad>(glm::vec3(-2.f, -2.f, 0.f), glm::vec3(4.f, 0.f, 0.f), glm::vec3(0.f, 4.f, 0.f), back_green));
+    world.add(std::make_shared<Quad>(glm::vec3(3.f, -2.f, 1.f), glm::vec3(0.f, 0.f, 4.f), glm::vec3(0.f, 4.f, 0.f), right_blue));
+    world.add(std::make_shared<Quad>(glm::vec3(-2.f, 3.f, 1.f), glm::vec3(4.f, 0.f, 0.f), glm::vec3(0.f, 0.f, 4.f), upper_orange));
+    world.add(std::make_shared<Quad>(glm::vec3(-2.f, -3.f, 5.f), glm::vec3(4.f, 0.f, 0.f), glm::vec3(0.f, 0.f, -4.f), lower_teal));
+
+    return world;
+}
+
+Camera testQuadSceneCamera(const glm::ivec2& imageSize) {
+    glm::vec3 lookFrom(0.f, 0.f, 9.f);
+    glm::vec3 lookAt(0.f, 0.f, 0.f);
+    Camera::Projection projection(imageSize, 80.f, 1.f);
+    Camera::Frame frame(lookFrom, lookAt);
+    return Camera(frame, projection);
+}
 
 HittableList testEarthScene() {
     HittableList world;
@@ -137,9 +166,9 @@ Camera finalSceneCamera(const glm::ivec2& imageSize) {
 }
 
 int main() {
-    glm::ivec2 imageSize = glm::ivec2(320, 180);
-    HittableList world = finalScene();
-    Camera camera = finalSceneCamera(imageSize);
+    glm::ivec2 imageSize = glm::ivec2(400, 400);
+    HittableList world = testQuadScene();
+    Camera camera = testQuadSceneCamera(imageSize);
     Image img(imageSize.x, imageSize.y);
 
     HittableList bvhWorld;

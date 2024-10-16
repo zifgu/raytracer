@@ -43,6 +43,11 @@ public:
 			getInterval(comp).expand(other.getInterval(comp));
 		}
 	}
+	void expand(const glm::vec3& point) {
+		for (int comp = 0; comp < 3; ++comp) {
+			getInterval(comp).expand(point[comp]);
+		}
+	}
 
 	bool hit(const Ray& ray, Interval tRange) const {
 		for (int comp = 0; comp < 3; ++comp) {
