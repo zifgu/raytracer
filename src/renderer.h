@@ -10,7 +10,7 @@ class Renderer {
 	int m_samplesPerPixel = 100;
 	int m_maxBounces = 10;
 
-	glm::vec3 envColor(const Ray& ray);
+	glm::vec3 envColor(const Ray& ray);	// TODO: refactor into a property of the scene
 	glm::vec3 rayColor(const Hittable& world, const Ray& ray, int depth);
 public:
 	void render(const Hittable& world, const Camera& camera, Image& output);

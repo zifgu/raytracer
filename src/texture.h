@@ -7,7 +7,7 @@ class Texture {
 public:
 	virtual ~Texture() = default;
 
-	virtual const glm::vec3& value(glm::vec2 uv, glm::vec3 p) const = 0;
+	virtual const glm::vec3& value(const glm::vec2& uv, const glm::vec3& p) const = 0;
 };
 
 class SolidColorTexture : public Texture {
@@ -16,7 +16,7 @@ public:
 
 	SolidColorTexture(const glm::vec3& color) : m_color(color) {}
 
-	const glm::vec3& value(glm::vec2 uv, glm::vec3 p) const override {
+	const glm::vec3& value(const glm::vec2& uv, const glm::vec3& p) const override {
 		return m_color;
 	};
 };
@@ -28,7 +28,7 @@ class CheckerTexture : public Texture {
 public:
 	CheckerTexture(float scale, std::shared_ptr<Texture> even, std::shared_ptr<Texture> odd) : m_inverseScale(1.f / scale), m_evenTexture(even), m_oddTexture(odd) {}
 
-	const glm::vec3& value(glm::vec2 uv, glm::vec3 p) const override {
+	const glm::vec3& value(const glm::vec2& uv, const glm::vec3& p) const override {
 		int x = static_cast<int>(glm::floor(p.x * m_inverseScale));
 		int y = static_cast<int>(glm::floor(p.y * m_inverseScale));
 		int z = static_cast<int>(glm::floor(p.z * m_inverseScale));
@@ -45,7 +45,7 @@ public:
 
 	ImageTexture(std::string file) : image(file) {}
 
-	const glm::vec3& value(glm::vec2 uv, glm::vec3 p) const override {
+	const glm::vec3& value(const glm::vec2& uv, const glm::vec3& p) const override {
 		if (image.width() <= 0 || image.height() <= 0) return emptyColor;
 
 		// nearest filtering
