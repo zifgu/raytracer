@@ -12,29 +12,29 @@ public:
 
 class SolidColorTexture : public Texture {
 public:
-	glm::vec3 color = glm::vec3(0.f);
+	glm::vec3 m_color = glm::vec3(0.f);
 
-	SolidColorTexture(const glm::vec3& color) : color(color) {}
+	SolidColorTexture(const glm::vec3& color) : m_color(color) {}
 
 	const glm::vec3& value(glm::vec2 uv, glm::vec3 p) const override {
-		return color;
+		return m_color;
 	};
 };
 
 class CheckerTexture : public Texture {
-	float invScale = 1.f;
-	std::shared_ptr<Texture> even;
-	std::shared_ptr<Texture> odd;
+	float m_inverseScale = 1.f;
+	std::shared_ptr<Texture> m_evenTexture = nullptr;
+	std::shared_ptr<Texture> m_oddTexture = nullptr;
 public:
-	CheckerTexture(float scale, std::shared_ptr<Texture> even, std::shared_ptr<Texture> odd) : invScale(1.f / scale), even(even), odd(odd) {}
+	CheckerTexture(float scale, std::shared_ptr<Texture> even, std::shared_ptr<Texture> odd) : m_inverseScale(1.f / scale), m_evenTexture(even), m_oddTexture(odd) {}
 
 	const glm::vec3& value(glm::vec2 uv, glm::vec3 p) const override {
-		int x = static_cast<int>(p.x * invScale);
-		int y = static_cast<int>(p.y * invScale);
-		int z = static_cast<int>(p.z * invScale);
+		int x = static_cast<int>(glm::floor(p.x * m_inverseScale));
+		int y = static_cast<int>(glm::floor(p.y * m_inverseScale));
+		int z = static_cast<int>(glm::floor(p.z * m_inverseScale));
 		bool isEven = (x + y + z) % 2 == 0;
 
-		return isEven ? even->value(uv, p) : odd->value(uv, p);
+		return isEven ? m_evenTexture->value(uv, p) : m_oddTexture->value(uv, p);
 	};
 };
 
@@ -52,10 +52,8 @@ public:
 		float u = glm::clamp(uv.x, 0.f, 1.f);
 		float v = 1.f - glm::clamp(uv.y, 0.f, 1.f);
 
-		int x = static_cast<int>(u * image.width());
-		int y = static_cast<int>(v * image.height());
+		int x = static_cast<int>(glm::floor(u * image.width()));
+		int y = static_cast<int>(glm::floor(v * image.height()));
 		return image.get(x, y);
 	};
 };
-
-const glm::vec3 ImageTexture::emptyColor = glm::vec3(1.f, 0.f, 1.f);

@@ -3,25 +3,29 @@
 #include "common.h"
 
 class Interval {
-public:
 	// Interval is empty by default
-	float min = infinity;
-	float max = -infinity;
-
+	float m_min = infinity;
+	float m_max = -infinity;
+public:
 	Interval() {}
-	Interval(float min, float max) : min(min), max(max) {}
+	Interval(float min, float max) : m_min(min), m_max(max) {}
 
-	float size() const { return max - min; }
-	bool contains(float x) const { return min <= x && x <= max; }
-	bool surrounds(float x) const { return min < x && x < max; }
-	float clamp(float x) const { return glm::clamp(x, min, max); }
+	float min() const { return m_min; }
+	float max() const { return m_max; }
+	void setMin(float min) { m_min = min; }
+	void setMax(float max) { m_max = max; }
+
+	float size() const { return max() - min(); }
+	bool contains(float x) const { return min() <= x && x <= max(); }
+	bool surrounds(float x) const { return min() < x && x < max(); }
+	float clamp(float x) const { return glm::clamp(x, min(), max()); }
 
 	void expand(const Interval& other) {
-		min = glm::min(min, other.min);
-		max = glm::max(max, other.max);
+		m_min = glm::min(min(), other.min());
+		m_max = glm::max(max(), other.max());
 	}
 
-	static Interval empty() { return { infinity, -infinity }; }
-	static Interval positive() { return { 0.f, infinity }; }
-	static Interval all() { return { -infinity, infinity }; }
+	static const Interval empty;
+	static const Interval positive;
+	static const Interval all;
 };

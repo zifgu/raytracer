@@ -3,16 +3,16 @@
 #include <iostream>
 
 void Renderer::render(const Hittable& world, const Camera& camera, Image& output) {
-	const float sampleFrac = 1.f / static_cast<float>(samplesPerPixel);
+	const float sampleFrac = 1.f / static_cast<float>(m_samplesPerPixel);
 	
 	for (int y = 0; y < output.height(); ++y) {
 		std::clog << "\rScanlines remaining: " << (output.height() - y) << ' ' << std::flush;
 
 		for (int x = 0; x < output.width(); ++x) {
 			glm::vec3 color = glm::vec3(0.f);
-			for (int s = 0; s < samplesPerPixel; ++s) {
+			for (int s = 0; s < m_samplesPerPixel; ++s) {
 				Ray ray = camera.getRay(x, y, true);
-				color += rayColor(world, ray, maxBounces);
+				color += rayColor(world, ray, m_maxBounces);
 			}
 			output.set(x, y, color * sampleFrac);
 		}

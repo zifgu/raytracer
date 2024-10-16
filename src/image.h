@@ -9,29 +9,29 @@
 
 class Image {
 private:
-	int w = 0;
-	int h = 0;
-	const int c = 3;
-	std::vector<glm::vec3> data;
+	int m_width = 0;
+	int m_height = 0;
+	const int m_channels = 3;
+	std::vector<glm::vec3> m_data;
 
 	int idx(int x, int y) const {
-		return y * w * c + x * c;
+		return y * m_width * m_channels + x * m_channels;
 	}
 public:
 	Image(std::string file);
-	Image(int width, int height) : w(width), h(height) {
-		data.resize(w * h * c);
+	Image(int width, int height) : m_width(width), m_height(height) {
+		m_data.resize(m_width * m_height * m_channels);
 	}
-	int width() const { return w; }
-	int height() const { return h; }
+	int width() const { return m_width; }
+	int height() const { return m_height; }
 	const glm::vec3& get(int x, int y) const {
-		return data[idx(x, y)];
+		return m_data[idx(x, y)];
 	}
 	glm::vec3& get(int x, int y) {
-		return data[idx(x, y)];
+		return m_data[idx(x, y)];
 	}
 	void set(int x, int y, const glm::vec3& val) {
-		data[idx(x, y)] = val;
+		m_data[idx(x, y)] = val;
 	}
 	void gammaCorrect(float gamma = 2.2f);
 	void write(std::string file) const;

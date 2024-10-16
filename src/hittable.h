@@ -1,8 +1,6 @@
 #pragma once
 
 #include "common.h"
-#include "ray.h"
-#include "interval.h"
 #include "aabb.h"
 
 class Material;

@@ -1,45 +1,44 @@
 #pragma once
 
 #include "common.h"
-#include "ray.h"
 
 class Camera {
 public:
 	// Camera transformation
 	class Frame {
 		// Camera position + axes in world coordinates.
-		glm::vec3 cameraPos;
-		glm::vec3 cameraX;
-		glm::vec3 cameraY;
-		glm::vec3 cameraZ;
+		glm::vec3 m_cameraPos;
+		glm::vec3 m_cameraX;
+		glm::vec3 m_cameraY;
+		glm::vec3 m_cameraZ;
 	public:
 		Frame(glm::vec3 lookFrom, glm::vec3 lookAt, glm::vec3 up = glm::vec3(0.f, 1.f, 0.f)) {
-			cameraPos = lookFrom;
-			cameraZ = glm::normalize(lookFrom - lookAt);	// camera looks down the negative z axis
-			cameraX = glm::normalize(glm::cross(up, cameraZ));
-			cameraY = glm::cross(cameraZ, cameraX);
+			m_cameraPos = lookFrom;
+			m_cameraZ = glm::normalize(lookFrom - lookAt);	// camera looks down the negative z axis
+			m_cameraX = glm::normalize(glm::cross(up, m_cameraZ));
+			m_cameraY = glm::cross(m_cameraZ, m_cameraX);
 		}
-		const glm::vec3& x() const { return cameraX; }
-		const glm::vec3& y() const { return cameraY; }
-		const glm::vec3& z() const { return cameraZ; }
-		const glm::vec3& pos() const { return cameraPos; }
+		const glm::vec3& x() const { return m_cameraX; }
+		const glm::vec3& y() const { return m_cameraY; }
+		const glm::vec3& z() const { return m_cameraZ; }
+		const glm::vec3& pos() const { return m_cameraPos; }
 	};
 
 	// Projection
 	class Projection {
-		float f = 0.0f;
-		float fov = 0.0f;
-		glm::vec2 imgSize = glm::vec2(0);
+		float m_focalLength = 0.0f;
+		float m_fov = 0.0f;
+		glm::vec2 m_imageSize = glm::vec2(0);
 	public:
-		Projection(glm::ivec2 imageSize, float fovDegreesVertical, float focalLength) : imgSize(imageSize), fov(fovDegreesVertical), f(focalLength) {}
+		Projection(glm::ivec2 imageSize, float fovDegreesVertical, float focalLength) : m_imageSize(imageSize), m_fov(fovDegreesVertical), m_focalLength(focalLength) {}
 
-		float focalLength() const { return f; }
-		float fovDegreesVertical() const { return fov; }
-		const glm::vec2& imageSize() const { return imgSize; }
-		float aspectRatio() const { return imgSize.x / imgSize.y; }
+		float focalLength() const { return m_focalLength; }
+		float fovDegreesVertical() const { return m_fov; }
+		const glm::vec2& imageSize() const { return m_imageSize; }
+		float aspectRatio() const { return m_imageSize.x / m_imageSize.y; }
 	};
 
-	Camera(const Frame& frame, const Projection& projection) : frame(frame), projection(projection) {
+	Camera(const Frame& frame, const Projection& projection) : m_frame(frame), m_projection(projection) {
 		float fovRadians = glm::radians(projection.fovDegreesVertical());
 		float viewportHeight = 2.f * glm::tan(0.5f * fovRadians) * projection.focalLength();
 		float viewportWidth = viewportHeight * projection.aspectRatio();
@@ -47,10 +46,10 @@ public:
 		glm::vec3 viewportRight = frame.x() * viewportWidth;
 		glm::vec3 viewportDown = -frame.y() * viewportHeight;
 		glm::vec3 viewportForward = -frame.z() * projection.focalLength();
-		pixelDeltaX = viewportRight / projection.imageSize().x;
-		pixelDeltaY = viewportDown / projection.imageSize().y;
+		m_pixelDeltaX = viewportRight / projection.imageSize().x;
+		m_pixelDeltaY = viewportDown / projection.imageSize().y;
 		glm::vec3 viewportUpperLeft = frame.pos() + viewportForward - 0.5f * (viewportRight + viewportDown);
-		pixelUpperLeft = viewportUpperLeft + 0.5f * (pixelDeltaX + pixelDeltaY);
+		m_pixelUpperLeft = viewportUpperLeft + 0.5f * (m_pixelDeltaX + m_pixelDeltaY);
 	}
 
 	// Return ray through pixel (x, y) in world coordinates
@@ -59,15 +58,15 @@ public:
 		glm::vec2 offset = jitter ?
 			glm::vec2(random() - 0.5f, random() - 0.5f) :
 			glm::vec2(0.f);
-		glm::vec3 pixel = pixelUpperLeft + pixelDeltaX * (static_cast<float>(x) + offset.x) + pixelDeltaY * (static_cast<float>(y) + offset.y);
-		return Ray(frame.pos(), pixel - frame.pos());
+		glm::vec3 pixel = m_pixelUpperLeft + m_pixelDeltaX * (static_cast<float>(x) + offset.x) + m_pixelDeltaY * (static_cast<float>(y) + offset.y);
+		return Ray(m_frame.pos(), pixel - m_frame.pos());
 	}
 private:
-	Frame frame;
-	Projection projection;
+	Frame m_frame;
+	Projection m_projection;
 
 	// Cached quantities for computing rays. In world coordinates.
-	glm::vec3 pixelUpperLeft;
-	glm::vec3 pixelDeltaX;
-	glm::vec3 pixelDeltaY;
+	glm::vec3 m_pixelUpperLeft = glm::vec3(0.f);
+	glm::vec3 m_pixelDeltaX = glm::vec3(0.f);
+	glm::vec3 m_pixelDeltaY = glm::vec3(0.f);
 };

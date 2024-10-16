@@ -4,9 +4,9 @@
 #include "material.h"
 
 class Sphere : public Hittable {
-	glm::vec3 center = glm::vec3(0.f);
-	float radius = 0.f;
-	std::shared_ptr<Material> material = nullptr;
+	glm::vec3 m_center = glm::vec3(0.f);
+	float m_radius = 0.f;
+	std::shared_ptr<Material> m_material = nullptr;
 
 	// p is a point on the unit sphere centered at 0
 	static glm::vec2 getSphereUV(const glm::vec3& p) {
@@ -24,13 +24,13 @@ class Sphere : public Hittable {
 		return glm::vec2(u, v);
 	}
 public:
-	Sphere(const glm::vec3& center, float radius, std::shared_ptr<Material> material) : center(center), radius(radius), material(material){}
+	Sphere(const glm::vec3& center, float radius, std::shared_ptr<Material> material) : m_center(center), m_radius(radius), m_material(material){}
 
 	bool hit(const Ray& ray, Interval tRange, HitRecord& hit) const override {
-		glm::vec3 oc = center - ray.origin();
+		glm::vec3 oc = m_center - ray.origin();
 		float a = glm::dot(ray.direction(), ray.direction());
 		float h = glm::dot(ray.direction(), oc);
-		float c = glm::dot(oc, oc) - radius * radius;
+		float c = glm::dot(oc, oc) - m_radius * m_radius;
 		float discriminant = h * h - a * c;
 		if (discriminant < 0.f) {
 			return false;
@@ -47,15 +47,15 @@ public:
 
 		hit.t = root;
 		hit.point = ray.at(hit.t);
-		glm::vec3 outwardNormal = (hit.point - center) / radius;
+		glm::vec3 outwardNormal = (hit.point - m_center) / m_radius;
 		hit.setFrontFaceAndNormal(ray, outwardNormal);
 		hit.uv = getSphereUV(outwardNormal);
-		hit.material = material;
+		hit.material = m_material;
 
 		return true;
 	}
 
 	AABox boundingBox() const override {
-		return AABox(center - radius, center + radius);
+		return AABox(m_center - m_radius, m_center + m_radius);
 	}
 };

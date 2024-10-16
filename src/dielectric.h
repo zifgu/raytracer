@@ -4,14 +4,14 @@
 
 class Dielectric : public Material {
 	// Index of refraction relative to enclosing media - usually vacuum or air, but may be otherwise
-	float indexOfRefraction = 1.f;
+	float m_indexOfRefraction = 1.f;
 
 	// Schlick approximation of Fresnel reflection
 	// iorRatio = ior on incident side / ior on transmitted side
 	static float fresnelReflectance(float cosTheta, float iorRatio) {
-		float r0 = (1 - iorRatio) / (1 + iorRatio);
+		float r0 = (1.f - iorRatio) / (1.f + iorRatio);
 		r0 = r0 * r0;
-		return r0 + (1.f - r0) * glm::pow(1.f - cosTheta, 5);
+		return r0 + (1.f - r0) * glm::pow(1.f - cosTheta, 5.f);
 	}
 
 	// incident, normal assumed to be normalized
@@ -29,11 +29,11 @@ class Dielectric : public Material {
 		return perp + parallel;
 	}
 public:
-	Dielectric(float indexOfRefraction) : indexOfRefraction(indexOfRefraction) {}
+	Dielectric(float indexOfRefraction) : m_indexOfRefraction(indexOfRefraction) {}
 
 	bool scatter(const Ray& ray, const Hittable::HitRecord& hit, glm::vec3& attenuation, Ray& scatteredRay) const {
 		attenuation = glm::vec3(1.f);
-		float relativeIOR = hit.frontFace ? 1.f / indexOfRefraction : indexOfRefraction;
+		float relativeIOR = hit.frontFace ? 1.f / m_indexOfRefraction : m_indexOfRefraction;
 		glm::vec3 refractDirection = refract(glm::normalize(ray.direction()), hit.normal, relativeIOR);
 		scatteredRay = Ray(hit.point, refractDirection);
 		return true;

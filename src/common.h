@@ -11,7 +11,7 @@
 #include <glm/trigonometric.hpp>
 
 const float infinity = std::numeric_limits<float>::infinity();
-const float pi = 3.14159265;
+const float pi = 3.14159265f;
 
 inline float random() {
 	static std::uniform_real_distribution<float> distribution(0.0, 1.0);
@@ -39,5 +39,9 @@ inline glm::vec3 randomOnHemisphere(glm::vec3 normal) {
 }
 
 inline int randomInt(int min, int max) {
-	return static_cast<int>(random(min, max + 1));
+	float randomFloat = random(static_cast<float>(min), static_cast<float>(max + 1));
+	return static_cast<int>(glm::floor(randomFloat));
 }
+
+#include "ray.h"
+#include "interval.h"

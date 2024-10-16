@@ -3,7 +3,6 @@
 
 #include "common.h"
 #include "image.h"
-#include "ray.h"
 #include "sphere.h"
 #include "hittable_list.h"
 #include "camera.h"
@@ -35,12 +34,12 @@ Camera testEarthSceneCamera(const glm::ivec2& imageSize) {
 HittableList testCheckeredSpheresScene() {
     HittableList world;
 
-    std::shared_ptr<Texture> checkerEven = std::make_shared<SolidColorTexture>(glm::vec3(.2, .3, .1));
-    std::shared_ptr<Texture> checkerOdd = std::make_shared<SolidColorTexture>(glm::vec3(.9, .9, .9));
-    std::shared_ptr<Texture> checker = std::make_shared<CheckerTexture>(0.32, checkerEven, checkerOdd);
+    std::shared_ptr<Texture> checkerEven = std::make_shared<SolidColorTexture>(glm::vec3(0.2f, 0.3f, 0.1f));
+    std::shared_ptr<Texture> checkerOdd = std::make_shared<SolidColorTexture>(glm::vec3(0.9f, 0.9f, 0.9f));
+    std::shared_ptr<Texture> checker = std::make_shared<CheckerTexture>(0.32f, checkerEven, checkerOdd);
 
-    world.add(std::make_shared<Sphere>(glm::vec3(0, -10, 0), 10, std::make_shared<Lambertian>(checker)));
-    world.add(std::make_shared<Sphere>(glm::vec3(0, 10, 0), 10, std::make_shared<Lambertian>(checker)));
+    world.add(std::make_shared<Sphere>(glm::vec3(0.f, -10.f, 0.f), 10.f, std::make_shared<Lambertian>(checker)));
+    world.add(std::make_shared<Sphere>(glm::vec3(0.f, 10.f, 0.f), 10.f, std::make_shared<Lambertian>(checker)));
 
     return world;
 }
@@ -55,21 +54,21 @@ Camera testCheckeredSpheresSceneCamera(const glm::ivec2& imageSize) {
 
 HittableList testScene() {
     HittableList world;
-    std::shared_ptr<Texture> checkerEven = std::make_shared<SolidColorTexture>(glm::vec3(.2, .3, .1));
-    std::shared_ptr<Texture> checkerOdd = std::make_shared<SolidColorTexture>(glm::vec3(.9, .9, .9));
-    std::shared_ptr<Texture> checker = std::make_shared<CheckerTexture>(0.32, checkerEven, checkerOdd);
+    std::shared_ptr<Texture> checkerEven = std::make_shared<SolidColorTexture>(glm::vec3(0.2f, 0.3f, 0.1f));
+    std::shared_ptr<Texture> checkerOdd = std::make_shared<SolidColorTexture>(glm::vec3(0.9f, 0.9f, 0.9f));
+    std::shared_ptr<Texture> checker = std::make_shared<CheckerTexture>(0.32f, checkerEven, checkerOdd);
 
     auto material_ground = std::make_shared<Lambertian>(checker);
-    auto material_center = std::make_shared<Lambertian>(glm::vec3(0.1, 0.2, 0.5));
-    auto material_left = std::make_shared<Dielectric>(1.50);
-    auto material_bubble = std::make_shared<Dielectric>(1.00 / 1.50);
-    auto material_right = std::make_shared<Metal>(glm::vec3(0.8, 0.6, 0.2), 1.0);
+    auto material_center = std::make_shared<Lambertian>(glm::vec3(0.1f, 0.2f, 0.5f));
+    auto material_left = std::make_shared<Dielectric>(1.5f);
+    auto material_bubble = std::make_shared<Dielectric>(1.f / 1.5f);
+    auto material_right = std::make_shared<Metal>(glm::vec3(0.8f, 0.6f, 0.2f), 1.f);
 
-    world.add(std::make_shared<Sphere>(glm::vec3(0.0, -100.5, -1.0), 100.0, material_ground));
-    world.add(std::make_shared<Sphere>(glm::vec3(0.0, 0.0, -1.2), 0.5, material_center));
-    world.add(std::make_shared<Sphere>(glm::vec3(-1.0, 0.0, -1.0), 0.5, material_left));
-    world.add(std::make_shared<Sphere>(glm::vec3(-1.0, 0.0, -1.0), 0.4, material_bubble));
-    world.add(std::make_shared<Sphere>(glm::vec3(1.0, 0.0, -1.0), 0.5, material_right));
+    world.add(std::make_shared<Sphere>(glm::vec3(0.f, -100.5f, -1.f), 100.f, material_ground));
+    world.add(std::make_shared<Sphere>(glm::vec3(0.f, 0.f, -1.2f), 0.5f, material_center));
+    world.add(std::make_shared<Sphere>(glm::vec3(-1.f, 0.f, -1.f), 0.5f, material_left));
+    world.add(std::make_shared<Sphere>(glm::vec3(-1.f, 0.f, -1.f), 0.4f, material_bubble));
+    world.add(std::make_shared<Sphere>(glm::vec3(1.f, 0.f, -1.f), 0.5f, material_right));
 
     return world;
 }
@@ -84,53 +83,53 @@ Camera testSceneCamera(const glm::ivec2& imageSize) {
 
 HittableList finalScene() {
     HittableList world;
-    auto ground_material = std::make_shared<Lambertian>(glm::vec3(0.5, 0.5, 0.5));
-    world.add(std::make_shared<Sphere>(glm::vec3(0, -1000, 0), 1000, ground_material));
+    auto ground_material = std::make_shared<Lambertian>(glm::vec3(0.5f, 0.5f, 0.5f));
+    world.add(std::make_shared<Sphere>(glm::vec3(0.f, -1000.f, 0.f), 1000.f, ground_material));
 
     for (int a = -11; a < 11; a++) {
         for (int b = -11; b < 11; b++) {
-            auto choose_mat = random();
-            glm::vec3 center(a + 0.9 * random(), 0.2, b + 0.9 * random());
+            float choose_mat = random();
+            glm::vec3 center(a + 0.9f * random(), 0.2f, b + 0.9f * random());
 
-            if ((center - glm::vec3(4, 0.2, 0)).length() > 0.9) {
+            if ((center - glm::vec3(4.f, 0.2f, 0.f)).length() > 0.9f) {
                 std::shared_ptr<Material> sphere_material;
 
-                if (choose_mat < 0.8) {
+                if (choose_mat < 0.8f) {
                     // diffuse
                     auto albedo = glm::vec3(random(), random(), random()) * glm::vec3(random(), random(), random());
                     sphere_material = std::make_shared<Lambertian>(albedo);
-                    world.add(std::make_shared<Sphere>(center, 0.2, sphere_material));
+                    world.add(std::make_shared<Sphere>(center, 0.2f, sphere_material));
                 }
-                else if (choose_mat < 0.95) {
+                else if (choose_mat < 0.95f) {
                     // metal
                     auto albedo = glm::vec3(random(0.5f, 1.f), random(0.5f, 1.f), random(0.5f, 1.f));
-                    auto fuzz = random(0, 0.5);
+                    auto fuzz = random(0.f, 0.5f);
                     sphere_material = std::make_shared<Metal>(albedo, fuzz);
-                    world.add(std::make_shared<Sphere>(center, 0.2, sphere_material));
+                    world.add(std::make_shared<Sphere>(center, 0.2f, sphere_material));
                 }
                 else {
                     // glass
-                    sphere_material = std::make_shared<Dielectric>(1.5);
-                    world.add(std::make_shared<Sphere>(center, 0.2, sphere_material));
+                    sphere_material = std::make_shared<Dielectric>(1.5f);
+                    world.add(std::make_shared<Sphere>(center, 0.2f, sphere_material));
                 }
             }
         }
     }
 
-    auto material1 = std::make_shared<Dielectric>(1.5);
-    world.add(std::make_shared<Sphere>(glm::vec3(0, 1, 0), 1.0, material1));
+    auto material1 = std::make_shared<Dielectric>(1.5f);
+    world.add(std::make_shared<Sphere>(glm::vec3(0.f, 1.f, 0.f), 1.f, material1));
 
-    auto material2 = std::make_shared<Lambertian>(glm::vec3(0.4, 0.2, 0.1));
-    world.add(std::make_shared<Sphere>(glm::vec3(-4, 1, 0), 1.0, material2));
+    auto material2 = std::make_shared<Lambertian>(glm::vec3(0.4f, 0.2f, 0.1f));
+    world.add(std::make_shared<Sphere>(glm::vec3(-4.f, 1.f, 0.f), 1.f, material2));
 
-    auto material3 = std::make_shared<Metal>(glm::vec3(0.7, 0.6, 0.5), 0.0);
-    world.add(std::make_shared<Sphere>(glm::vec3(4, 1, 0), 1.0, material3));
+    auto material3 = std::make_shared<Metal>(glm::vec3(0.7f, 0.6f, 0.5f), 0.f);
+    world.add(std::make_shared<Sphere>(glm::vec3(4.f, 1.f, 0.f), 1.f, material3));
 
     return world;
 }
 
 Camera finalSceneCamera(const glm::ivec2& imageSize) {
-    glm::vec3 lookFrom(13, 2, 3);
+    glm::vec3 lookFrom(13.f, 2.f, 3.f);
     glm::vec3 lookAt(0.f, 0.f, 0.f);
     Camera::Projection projection(imageSize, 20.f, 10.f);
     Camera::Frame frame(lookFrom, lookAt);
@@ -139,12 +138,12 @@ Camera finalSceneCamera(const glm::ivec2& imageSize) {
 
 int main() {
     glm::ivec2 imageSize = glm::ivec2(320, 180);
-    HittableList world = testEarthScene();
-    Camera camera = testEarthSceneCamera(imageSize);
+    HittableList world = finalScene();
+    Camera camera = finalSceneCamera(imageSize);
     Image img(imageSize.x, imageSize.y);
 
     HittableList bvhWorld;
-    bvhWorld.add(std::make_shared<BVHNode>(world.get(), 0, world.get().size()));
+    bvhWorld.add(std::make_shared<BVHNode>(world.objects(), 0, world.objects().size()));
 	
 	Renderer renderer;
 	renderer.render(bvhWorld, camera, img);
