@@ -10,8 +10,8 @@ class Renderer {
 	glm::vec3 envColor(const Ray& ray);
 	glm::vec3 rayColor(const Hittable& world, const Ray& ray, int depth);
 public:
-	int samplesPerPixel = 500;
-	int maxBounces = 50;
+	int samplesPerPixel = 100;
+	int maxBounces = 10;
 
 	void render(const Hittable& world, const Camera& camera, Image& output);
 };
