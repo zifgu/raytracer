@@ -36,3 +36,7 @@ inline glm::vec3 randomOnHemisphere(glm::vec3 normal) {
 	glm::vec3 vec = randomOnSphere();
 	return glm::sign(glm::dot(vec, normal)) * vec;
 }
+
+inline int randomInt(int min, int max) {
+	return static_cast<int>(random(min, max + 1));
+}

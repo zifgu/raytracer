@@ -4,8 +4,9 @@
 
 class Interval {
 public:
-	float min = -infinity;
-	float max = infinity;
+	// Interval is empty by default
+	float min = infinity;
+	float max = -infinity;
 
 	Interval() {}
 	Interval(float min, float max) : min(min), max(max) {}
@@ -14,6 +15,11 @@ public:
 	bool contains(float x) const { return min <= x && x <= max; }
 	bool surrounds(float x) const { return min < x && x < max; }
 	float clamp(float x) const { return glm::clamp(x, min, max); }
+
+	void expand(const Interval& other) {
+		min = glm::min(min, other.min);
+		max = glm::max(max, other.max);
+	}
 
 	static Interval empty() { return { infinity, -infinity }; }
 	static Interval positive() { return { 0.f, infinity }; }

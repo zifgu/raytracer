@@ -37,4 +37,8 @@ public:
 
 		return true;
 	}
+
+	AABox boundingBox() const override {
+		return AABox(center - radius, center + radius);
+	}
 };

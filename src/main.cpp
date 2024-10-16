@@ -99,9 +99,12 @@ int main() {
     HittableList world = finalScene();
     Camera camera = finalSceneCamera(imageSize);
     Image img(imageSize.x, imageSize.y);
+
+    HittableList bvhWorld;
+    bvhWorld.add(std::make_shared<BVHNode>(world.get(), 0, world.get().size()));
 	
 	Renderer renderer;
-	renderer.render(world, camera, img);
+	renderer.render(bvhWorld, camera, img);
 
 	img.gammaCorrect();
 
