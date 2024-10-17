@@ -24,6 +24,13 @@ public:
 		}
 	}
 
+	Interval& x() { return m_x; }
+	Interval& y() { return m_y; }
+	Interval& z() { return m_z; }
+	const Interval& x() const { return m_x; }
+	const Interval& y() const { return m_y; }
+	const Interval& z() const { return m_z; }
+
 	Interval& getInterval(int comp) {
 		return comp == 0 ? m_x : (comp == 1 ? m_y : m_z);
 	}

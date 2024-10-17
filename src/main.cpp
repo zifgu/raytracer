@@ -1,6 +1,9 @@
 #include <iostream>
 #include <limits>
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/euler_angles.hpp>
+
 #include "common.h"
 #include "image.h"
 #include "sphere.h"
@@ -13,10 +16,13 @@
 #include "dielectric.h"
 #include "emissive.h"
 #include "bvh.h"
+#include "transform.h"
 
 // Creates the 3D box (six sides) that contains the two opposite vertices a & b.
-void addBox(HittableList& world, const glm::vec3& a, const glm::vec3& b, std::shared_ptr<Material> mat)
+std::shared_ptr<HittableList> makeBox(const glm::vec3& a, const glm::vec3& b, std::shared_ptr<Material> mat)
 {
+    std::shared_ptr<HittableList> box = std::make_shared<HittableList>();
+
     // Construct the two opposite vertices with the minimum and maximum coordinates.
     auto min = glm::vec3(glm::min(a.x, b.x), glm::min(a.y, b.y), glm::min(a.z, b.z));
     auto max = glm::vec3(glm::max(a.x, b.x), glm::max(a.y, b.y), glm::max(a.z, b.z));
@@ -25,12 +31,14 @@ void addBox(HittableList& world, const glm::vec3& a, const glm::vec3& b, std::sh
     auto dy = glm::vec3(0, max.y - min.y, 0);
     auto dz = glm::vec3(0, 0, max.z - min.z);
 
-    world.add(std::make_shared<Quad>(glm::vec3(min.x, min.y, max.z), dx, dy, mat)); // front
-    world.add(std::make_shared<Quad>(glm::vec3(max.x, min.y, max.z), -dz, dy, mat)); // right
-    world.add(std::make_shared<Quad>(glm::vec3(max.x, min.y, min.z), -dx, dy, mat)); // back
-    world.add(std::make_shared<Quad>(glm::vec3(min.x, min.y, min.z), dz, dy, mat)); // left
-    world.add(std::make_shared<Quad>(glm::vec3(min.x, max.y, max.z), dx, -dz, mat)); // top
-    world.add(std::make_shared<Quad>(glm::vec3(min.x, min.y, min.z), dx, dz, mat)); // bottom
+    box->add(std::make_shared<Quad>(glm::vec3(min.x, min.y, max.z), dx, dy, mat)); // front
+    box->add(std::make_shared<Quad>(glm::vec3(max.x, min.y, max.z), -dz, dy, mat)); // right
+    box->add(std::make_shared<Quad>(glm::vec3(max.x, min.y, min.z), -dx, dy, mat)); // back
+    box->add(std::make_shared<Quad>(glm::vec3(min.x, min.y, min.z), dz, dy, mat)); // left
+    box->add(std::make_shared<Quad>(glm::vec3(min.x, max.y, max.z), dx, -dz, mat)); // top
+    box->add(std::make_shared<Quad>(glm::vec3(min.x, min.y, min.z), dx, dz, mat)); // bottom
+
+    return box;
 }
 
 HittableList cornellBoxScene() {
@@ -48,8 +56,16 @@ HittableList cornellBoxScene() {
     world.add(std::make_shared<Quad>(glm::vec3(555.f, 555.f, 555.f), glm::vec3(-555.f, 0.f, 0.f), glm::vec3(0.f, 0.f, -555.f), white));
     world.add(std::make_shared<Quad>(glm::vec3(0.f, 0.f, 555.f), glm::vec3(555.f, 0.f, 0.f), glm::vec3(0.f, 555.f, 0.f), white));
 
-    addBox(world, glm::vec3(130.f, 0.f, 65.f), glm::vec3(295.f, 165.f, 230.f), white);
-    addBox(world, glm::vec3(265.f, 0.f, 295.f), glm::vec3(430.f, 330.f, 460.f), white);
+    std::shared_ptr<Hittable> box1 = makeBox(glm::vec3(0.f, 0.f, 0.f), glm::vec3(165.f, 330.f, 165.f), white);
+
+    box1 = std::make_shared<Transform>(box1, glm::vec3(265.f, 0.f, 295.f), glm::eulerAngleY(glm::radians(15.f)));
+
+    std::shared_ptr<Hittable> box2 = makeBox(glm::vec3(0.f, 0.f, 0.f), glm::vec3(165.f, 165.f, 165.f), white);
+
+    box2 = std::make_shared<Transform>(box2, glm::vec3(130.f, 0.f, 65.f), glm::eulerAngleY(glm::radians(-18.f)));
+
+    world.add(box1);
+    world.add(box2);
 
     return world;
 }

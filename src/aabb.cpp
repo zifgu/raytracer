@@ -1,4 +1,12 @@
 #include "aabb.h"
 
-const AABox AABox::empty = AABox(Interval::empty, Interval::empty, Interval::empty);
-const AABox AABox::all = AABox(Interval::all, Interval::all, Interval::all);
+const AABox AABox::empty = AABox(
+	Interval(infinity, -infinity),
+	Interval(infinity, -infinity),
+	Interval(infinity, -infinity)
+);
+const AABox AABox::all = AABox(
+	Interval(-infinity, infinity),
+	Interval(-infinity, infinity),
+	Interval(-infinity, infinity)
+);

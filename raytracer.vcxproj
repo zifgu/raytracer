@@ -38,6 +38,7 @@
     <ClInclude Include="src\stb_image.h" />
     <ClInclude Include="src\stb_image_write.h" />
     <ClInclude Include="src\texture.h" />
+    <ClInclude Include="src\transform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\aabb.cpp" />
