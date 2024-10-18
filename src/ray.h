@@ -12,4 +12,6 @@ public:
 	const glm::vec3& origin() const { return m_origin; }
 	const glm::vec3& direction() const { return m_direction; }
 	glm::vec3 at(float t) const { return m_origin + t * m_direction; }
+	inline bool operator==(const Ray& other) const { return m_origin == other.m_origin && m_direction == other.m_direction; }
+	inline bool operator!=(const Ray& other) const { return !(*this == other); }
 };

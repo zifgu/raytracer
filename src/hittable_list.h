@@ -9,7 +9,10 @@ class HittableList : public Hittable {
 	std::vector<std::shared_ptr<Hittable>> m_objects;
 	AABox m_bbox = AABox::empty;
 public:
-	void clear() { m_objects.clear(); }
+	void clear() {
+		m_objects.clear();
+		m_bbox = AABox::empty;
+	}
 	void add(std::shared_ptr<Hittable> object) {
 		m_objects.push_back(object);
 		m_bbox.expand(object->boundingBox());

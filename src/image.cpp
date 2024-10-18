@@ -6,7 +6,9 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
-Image::Image(std::string file) {
+Image::Image(std::string file, float gamma) {
+	stbi_ldr_to_hdr_gamma(gamma);
+
 	int n;
 	float* rawData = stbi_loadf(file.c_str(), &m_width, &m_height, &n, m_channels);
 	if (rawData == nullptr) {
@@ -25,11 +27,13 @@ Image::Image(std::string file) {
 	}
 }
 
-void Image::write(std::string file) const {
+void Image::write(std::string file, float gamma) const {
 	uint8_t* data = new uint8_t[m_width * m_height * m_channels];
 	for (int x = 0; x < m_width; ++x) {
 		for (int y = 0; y < m_height; ++y) {
-			glm::vec3 pixel = glm::clamp(get(x, y) * 255.0f, 0.f, 255.f);
+			glm::vec3 pixel = get(x, y);
+			pixel = gammaCorrect(pixel, gamma);
+			pixel = glm::clamp(pixel * 255.0f, 0.f, 255.f);
 
 			// stbi_write expects 8-bit values in left-to-right, top-to-bottom, RGB order
 			int dataIdx = y * m_width * m_channels + x * m_channels;
@@ -42,16 +46,4 @@ void Image::write(std::string file) const {
 	stbi_write_png(file.c_str(), m_width, m_height, m_channels, data, m_width * m_channels);
 
 	delete[] data;
-}
-
-void Image::gammaCorrect(float gamma) {
-	float inverseGamma = 1.f / gamma;
-
-	for (int x = 0; x < m_width; ++x) {
-		for (int y = 0; y < m_height; ++y) {
-			glm::vec3 pixel = get(x, y);
-			glm::vec3 corrected = glm::pow(glm::max(pixel, 0.f), glm::vec3(inverseGamma));
-			set(x, y, corrected);
-		}
-	}
 }

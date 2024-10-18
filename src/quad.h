@@ -44,6 +44,16 @@ public:
 		setBBox();
 	}
 
+	const glm::vec3& corner() const { return m_corner; }
+	const glm::vec3& side1() const { return m_side1; }
+	const glm::vec3& side2() const { return m_side2; }
+	const std::shared_ptr<Material> material() const { return m_material; }
+
+	// unit normal of plane containing this quad
+	const glm::vec3& planeNormal() const { return m_planeNormal; }
+	// value D in the plane equation n_x * x + n_y * y + n_z * z = D
+	float planeD() const { return m_planeD; }
+
 	bool hit(const Ray& ray, Interval tRange, HitRecord& hit) const override {
 		float denom = glm::dot(m_planeNormal, ray.direction());
 		
@@ -52,7 +62,7 @@ public:
 			return false;
 		
 		float t = (m_planeD - glm::dot(m_planeNormal, ray.origin())) / denom;
-		if (!tRange.contains(t))	// TODO: why contains vs surrounds?
+		if (!tRange.surrounds(t))
 			return false;
 
 		glm::vec3 intersectionPoint = ray.at(t);

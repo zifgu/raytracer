@@ -1,9 +1,6 @@
 #include <iostream>
 #include <limits>
 
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/euler_angles.hpp>
-
 #include "common.h"
 #include "image.h"
 #include "sphere.h"
@@ -263,8 +260,6 @@ int main() {
 	
 	Renderer renderer;
 	renderer.render(bvhWorld, camera, img);
-
-	img.gammaCorrect();
 
 	img.write("C:\\Users\\markf\\GitHub\\raytracer\\render\\test.png");
 }
