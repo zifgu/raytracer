@@ -15,6 +15,9 @@ public:
 	void setMin(float min) { m_min = min; }
 	void setMax(float max) { m_max = max; }
 
+	inline bool operator==(const Interval& other) const { return m_min == other.m_min && m_max == other.m_max; }
+	inline bool operator!=(const Interval& other) const { return !(*this == other); }
+
 	float size() const { return max() - min(); }
 	bool contains(float x) const { return min() <= x && x <= max(); }
 	bool surrounds(float x) const { return min() < x && x < max(); }
@@ -35,5 +38,6 @@ public:
 
 	static const Interval empty;
 	static const Interval positive;
+	static const Interval negative;
 	static const Interval all;
 };

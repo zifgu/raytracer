@@ -52,7 +52,8 @@ public:
 		m_pixelUpperLeft = viewportUpperLeft + 0.5f * (m_pixelDeltaX + m_pixelDeltaY);
 	}
 
-	// Return ray through pixel (x, y) in world coordinates
+	// Return ray through pixel (x, y) (from top left) in world coordinates
+	// Returned ray direction is exact, not necessarily unit vector
 	Ray getRay(int x, int y, bool jitter = false) const {
 		// random offset in [-0.5, -0.5] to [0.5, 0.5]
 		glm::vec2 offset = jitter ?

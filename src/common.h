@@ -11,6 +11,9 @@
 #include <glm/geometric.hpp>
 #include <glm/trigonometric.hpp>
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/euler_angles.hpp>
+
 const float infinity = std::numeric_limits<float>::infinity();
 const float pi = 3.14159265f;
 

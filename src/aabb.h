@@ -38,6 +38,9 @@ public:
 		return comp == 0 ? m_x : (comp == 1 ? m_y : m_z);
 	}
 
+	inline bool operator==(const AABox& other) const { return m_x == other.m_x && m_y == other.m_y && m_z == other.m_z; }
+	inline bool operator!=(const AABox& other) const { return !(*this == other); }
+
 	int longestAxis() const {
 		if (m_x.size() > m_y.size())
 			return m_x.size() > m_z.size() ? 0 : 2;
@@ -57,6 +60,10 @@ public:
 	}
 
 	bool hit(const Ray& ray, Interval tRange) const {
+		// Catch degenerate rays (direction is zero); otherwise, these will pass the interval test as long as the origin is inside the box
+		const float epsilon = 1e-8f;
+		if (glm::dot(ray.direction(), ray.direction()) < epsilon) return false;
+
 		for (int comp = 0; comp < 3; ++comp) {
 			Interval hitRange = hitInterval(comp, ray);
 			if (hitRange.min() > tRange.min()) tRange.setMin(hitRange.min());
