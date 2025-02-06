@@ -55,7 +55,7 @@ namespace UnitTest {
 			Hittable::HitRecord expectHitReversed = expectHit;
 			// if ray is expected to be tangent to surface, reversing it should not affect normal
 			if (!expectTangent) {
-				expectHitReversed.normal = -expectHit.normal;	
+				expectHitReversed.normal = -expectHit.normal;
 				expectHitReversed.frontFace = !expectHit.frontFace;
 			}
 			expectHitReversed.t = -expectT;
